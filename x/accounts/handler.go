@@ -4,9 +4,9 @@ import (
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/user/accounts/x/accounts/keeper"
-	"github.com/user/accounts/x/accounts/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/onomyprotocol/accounts/x/accounts/keeper"
+	"github.com/onomyprotocol/accounts/x/accounts/types"
 )
 
 // NewHandler ...

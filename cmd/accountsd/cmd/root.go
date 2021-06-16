@@ -7,11 +7,11 @@ import (
 	"path/filepath"
 
 	"github.com/cosmos/cosmos-sdk/snapshots"
-	"github.com/user/accounts/app/params"
+	"github.com/onomyprotocol/accounts/app/params"
 
 	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
-    "github.com/spf13/pflag"
+	"github.com/spf13/pflag"
 	tmcli "github.com/tendermint/tendermint/libs/cli"
 	"github.com/tendermint/tendermint/libs/log"
 	dbm "github.com/tendermint/tm-db"
@@ -33,7 +33,7 @@ import (
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	"github.com/cosmos/cosmos-sdk/x/crisis"
 	genutilcli "github.com/cosmos/cosmos-sdk/x/genutil/client/cli"
-	"github.com/user/accounts/app"
+	"github.com/onomyprotocol/accounts/app"
 	// this line is used by starport scaffolding # stargate/root/import
 )
 
@@ -43,7 +43,7 @@ var ChainID string
 // main function.
 func NewRootCmd() (*cobra.Command, params.EncodingConfig) {
 	// Set config for prefixes
-    app.SetConfig()
+	app.SetConfig()
 
 	encodingConfig := app.MakeEncodingConfig()
 	initClientCtx := client.Context{}.
@@ -57,7 +57,7 @@ func NewRootCmd() (*cobra.Command, params.EncodingConfig) {
 		WithHomeDir(app.DefaultNodeHome)
 
 	rootCmd := &cobra.Command{
-		Use:   app.Name+"d",
+		Use:   app.Name + "d",
 		Short: "Stargate CosmosHub App",
 		PersistentPreRunE: func(cmd *cobra.Command, _ []string) error {
 			if err := client.SetCmdClientContextHandler(initClientCtx, cmd); err != nil {
@@ -92,8 +92,8 @@ func initRootCmd(rootCmd *cobra.Command, encodingConfig params.EncodingConfig) {
 		// this line is used by starport scaffolding # stargate/root/commands
 	)
 
-    a := appCreator{encodingConfig}
-    server.AddCommands(rootCmd, app.DefaultNodeHome, a.newApp, a.appExport, addModuleInitFlags)
+	a := appCreator{encodingConfig}
+	server.AddCommands(rootCmd, app.DefaultNodeHome, a.newApp, a.appExport, addModuleInitFlags)
 
 	// add keybase, auxiliary RPC, query, and tx child commands
 	rootCmd.AddCommand(
@@ -162,7 +162,7 @@ func txCommand() *cobra.Command {
 }
 
 type appCreator struct {
-    encCfg params.EncodingConfig
+	encCfg params.EncodingConfig
 }
 
 // newApp is an AppCreator
@@ -193,14 +193,14 @@ func (a appCreator) newApp(logger log.Logger, db dbm.DB, traceStore io.Writer, a
 		panic(err)
 	}
 
-    // this line is used by starport scaffolding # stargate/root/appBeforeInit
+	// this line is used by starport scaffolding # stargate/root/appBeforeInit
 
 	return app.New(
 		logger, db, traceStore, true, skipUpgradeHeights,
 		cast.ToString(appOpts.Get(flags.FlagHome)),
 		cast.ToUint(appOpts.Get(server.FlagInvCheckPeriod)),
-        a.encCfg,
-        // this line is used by starport scaffolding # stargate/root/appArgument
+		a.encCfg,
+		// this line is used by starport scaffolding # stargate/root/appArgument
 		appOpts,
 		baseapp.SetPruning(pruningOpts),
 		baseapp.SetMinGasPrices(cast.ToString(appOpts.Get(server.FlagMinGasPrices))),
@@ -217,46 +217,46 @@ func (a appCreator) newApp(logger log.Logger, db dbm.DB, traceStore io.Writer, a
 }
 
 // appExport creates a new simapp (optionally at a given height)
-func (a appCreator) appExport (
+func (a appCreator) appExport(
 	logger log.Logger, db dbm.DB, traceStore io.Writer, height int64, forZeroHeight bool, jailAllowedAddrs []string,
 	appOpts servertypes.AppOptions) (servertypes.ExportedApp, error) {
 
 	var anApp *app.App
 
-    homePath, ok := appOpts.Get(flags.FlagHome).(string)
-    if !ok || homePath == "" {
-        return servertypes.ExportedApp{}, errors.New("application home not set")
-    }
+	homePath, ok := appOpts.Get(flags.FlagHome).(string)
+	if !ok || homePath == "" {
+		return servertypes.ExportedApp{}, errors.New("application home not set")
+	}
 
 	if height != -1 {
-	    anApp = app.New(
-	        logger,
-	        db,
-	        traceStore,
-	        false,
-	        map[int64]bool{},
-	        homePath,
-	        uint(1),
-	        a.encCfg,
-	        // this line is used by starport scaffolding # stargate/root/exportArgument
-	        appOpts,
-	    )
+		anApp = app.New(
+			logger,
+			db,
+			traceStore,
+			false,
+			map[int64]bool{},
+			homePath,
+			uint(1),
+			a.encCfg,
+			// this line is used by starport scaffolding # stargate/root/exportArgument
+			appOpts,
+		)
 
 		if err := anApp.LoadHeight(height); err != nil {
 			return servertypes.ExportedApp{}, err
 		}
 	} else {
 		anApp = app.New(
-		    logger,
-		    db,
-		    traceStore,
-		    true,
-		    map[int64]bool{},
-		    homePath,
-		    uint(1),
-		    a.encCfg,
-		    // this line is used by starport scaffolding # stargate/root/noHeightExportArgument
-		    appOpts,
+			logger,
+			db,
+			traceStore,
+			true,
+			map[int64]bool{},
+			homePath,
+			uint(1),
+			a.encCfg,
+			// this line is used by starport scaffolding # stargate/root/noHeightExportArgument
+			appOpts,
 		)
 	}
 
@@ -267,7 +267,7 @@ func overwriteFlagDefaults(c *cobra.Command, defaults map[string]string) {
 	set := func(s *pflag.FlagSet, key, val string) {
 		if f := s.Lookup(key); f != nil {
 			f.DefValue = val
-            f.Value.Set(val)
+			f.Value.Set(val)
 		}
 	}
 	for key, val := range defaults {

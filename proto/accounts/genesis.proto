@@ -3,7 +3,7 @@ package user.accounts.accounts;
 
 // this line is used by starport scaffolding # genesis/proto/import
 
-option go_package = "github.com/user/accounts/x/accounts/types";
+option go_package = "github.com/onomyprotocol/accounts/x/accounts/types";
 
 // GenesisState defines the accounts module's genesis state.
 message GenesisState {

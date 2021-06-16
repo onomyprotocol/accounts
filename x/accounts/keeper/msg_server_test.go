@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-    "github.com/user/accounts/x/accounts/types"
+	"github.com/onomyprotocol/accounts/x/accounts/types"
 )
 
 func setupMsgServer(t testing.TB) (types.MsgServer, context.Context) {
