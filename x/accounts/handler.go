@@ -17,7 +17,20 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 		ctx = ctx.WithEventManager(sdk.NewEventManager())
 
 		switch msg := msg.(type) {
-		// this line is used by starport scaffolding # 1
+		case types.MsgAuthorize:
+			k.Authorize(ctx, msg.Operator, msg.Authorizer, msg.Capability, msg.Expiration)
+			return sdk.Result{}
+		case types.MsgExecAuthorizedAction:
+			return k.DispatchActions(ctx, msg.Signer, msg.Msgs)
+		case types.MsgRevoke:
+			k.Revoke(ctx, msg.Operator, msg.Authorizer, msg.MsgType)
+			return sdk.Result{}
+		case types.MsgAuthorizeFeeAllowance:
+			k.AuthorizeFeeAllowance(ctx, msg.Operator, msg.Authorizer, msg.Allowance)
+			return sdk.Result{}
+		case types.MsgRevokeFeeAllowance:
+			k.RevokeFeeAllowance(ctx, msg.Operator, msg.Authorizer)
+			return sdk.Result{}
 		default:
 			errMsg := fmt.Sprintf("unrecognized %s message type: %T", types.ModuleName, msg)
 			return nil, sdkerrors.Wrap(sdkerrors.ErrUnknownRequest, errMsg)
